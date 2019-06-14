@@ -1,0 +1,33 @@
+{
+  "name": "strangertalk",
+  "version": "1.0.0",
+  "description": "Final Project of WebProgramming2019",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/j1a0m0e4sNTU/StrangerTalk.git"
+  },
+  "author": "James Lin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/j1a0m0e4sNTU/StrangerTalk/issues"
+  },
+  "homepage": "https://github.com/j1a0m0e4sNTU/StrangerTalk#readme",
+  "dependencies": {
+    "@babel/polyfill": "^7.4.4",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-graphql": "^0.8.0",
+    "graphql": "^14.3.1",
+    "mongoose": "^5.5.15"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5"
+  }
+}
