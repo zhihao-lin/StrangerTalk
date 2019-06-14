@@ -1,4 +1,5 @@
 const db = require('./db');
+const uuid4 = require('uuid4');
 const graphql = require('graphql');
 const {
     GraphQLObjectType,
@@ -18,6 +19,7 @@ const UserType = new GraphQLObjectType({
     fields: () => ({
         id: {type: GraphQLID}, 
         name: {type: GraphQLString},
+        age: {type: GraphQLInt},
         description: {type: GraphQLString}, 
         latitude: {type: GraphQLFloat},
         longitude: {type: GraphQLFloat},
@@ -54,6 +56,37 @@ const RootQuery = new GraphQLObjectType({
     })
 })
 
+
+const Mutation = new GraphQLObjectType({
+    name: 'Mutation', 
+    fields: () => ({
+        addUser: {
+            type: UserType,
+            args: {
+                name: {type: new GraphQLNonNull(GraphQLString)},
+                age: {type: new GraphQLNonNull(GraphQLInt)},
+                description: {type: GraphQLString},
+                latitude: {type: new GraphQLNonNull(GraphQLFloat)}, 
+                longitude: {type: new GraphQLNonNull(GraphQLFloat)}
+            }, 
+            resolve(parent, args){
+                let user = {
+                    id: uuid4(),
+                    name: args.name,
+                    age: args.age,
+                    description: args.description,
+                    latitude: args.latitude,
+                    longitude: args.longitude
+                }
+                
+                db.users.push(user);
+                return user;
+            }
+        }
+    })
+})
+
 module.exports = new GraphQLSchema({
     query: RootQuery,
+    mutation: Mutation
 })
