@@ -4,20 +4,17 @@ const users = [
         name: "Alex",
         age: 19,
         description: "How are you ?",
-        position: {
-            latitude: 23.5,
-            longitude: 180 
-        }
+        latitude: 23.5,
+        longitude: 180 
     },
     {
         id: "1",
         name: "Jane",
         age: 20,
         description: "You only live once",
-        position: {
-            latitude: 24,
-            longitude: 50
-        }
+        latitude: 24,
+        longitude: 182
+        
     }
 ]
 
