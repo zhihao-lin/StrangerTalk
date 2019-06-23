@@ -92,6 +92,9 @@ export default class MapScreen extends Component {
                             <TouchableOpacity style={styles.button} onPress={this.getLocation.bind(this)}>
                                 <Text style={styles.buttonText}>Where am I ?</Text>
                             </TouchableOpacity>
+                            <TouchableOpacity style={styles.button} onPress={() => this.props.navigation.push('ChatRoomScreen')}>
+                                <Text style={styles.buttonText}>GO to ChatRoom</Text>
+                            </TouchableOpacity>
                         </SafeAreaView>
 
                     );
