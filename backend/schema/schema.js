@@ -63,15 +63,14 @@ const RootQuery = new GraphQLObjectType({
             }
         },
 
-        chatrooms: {
+        chatRooms: {
             type: new GraphQLList(ChatRoomType),
             args: {userID: {type: GraphQLID}},
             resolve(parent, args){
-                let chatrooms = db.chatrooms.filter(chatroom => {
-                    return chatroom.userIDs.includes(args.userID);
+                let chatRooms = db.chatRooms.filter(chatRoom => {
+                    return chatRoom.userIDs.includes(args.userID);
                 })
-
-                return chatrooms;
+                return chatRooms;
             }
         },
     })
@@ -102,6 +101,33 @@ const Mutation = new GraphQLObjectType({
                 
                 db.users.push(user);
                 return user;
+            }
+        },
+
+        sendMessage: {
+            type: ChatRoomType,
+            args: {
+                from: {type: new GraphQLNonNull(GraphQLID)}, 
+                to: {type: new GraphQLNonNull(GraphQLID)}, 
+                message: {type: new GraphQLNonNull(GraphQLString)}
+            },
+            resolve(parent, args){
+                let chatRoom = db.chatRooms.find(chatRoom => {
+                    return chatRoom.userIDs.includes(args.from) && chatRoom.userIDs.includes(args.to);
+                })
+
+                if (chatRoom === undefined){
+                    let newChatRoom = {
+                        id: uuid4(),
+                        userIDs: [args.from, args.to],
+                        messages: [[args.from, args.message]]
+                    }
+                    db.chatRooms.push(newChatRoom);
+                    return newChatRoom;
+                } else {
+                    chatRoom.messages.push([args.from, args.message]);
+                    return chatRoom;
+                }
             }
         }
     })

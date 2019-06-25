@@ -27,7 +27,7 @@ let users = [
     }
 ]
 
-let chatrooms = [
+let chatRooms = [
     {
         id: "chatroom_0",
         userIDs: ['0', '1'],
@@ -51,7 +51,7 @@ let chatrooms = [
 
 const db = {
     "users": users,
-    'chatrooms': chatrooms
+    'chatRooms': chatRooms
 }
 
 module.exports = db;
