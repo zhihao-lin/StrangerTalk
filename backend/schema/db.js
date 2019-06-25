@@ -1,4 +1,4 @@
-const users = [
+let users = [
     {
         id: "0",
         name: "Alex",
@@ -27,8 +27,31 @@ const users = [
     }
 ]
 
+let chatrooms = [
+    {
+        id: "chatroom_0",
+        userIDs: ['0', '1'],
+        messages: [
+            ['0', 'Hi'],
+            ['1', 'How are you'],
+            ['0', 'fine, and you?']
+        ]
+    },
+
+    {
+        id: "chatroom_1",
+        userIDs: ['1', '2'], 
+        messages: [
+            ['1', 'Do you want to have dinner with me?'],
+            ['2', 'Of course, why not'],
+            ['1', 'Cool, see you at front gate in 5 minutes']
+        ]
+    }
+]
+
 const db = {
-    "users": users
+    "users": users,
+    'chatrooms': chatrooms
 }
 
 module.exports = db;

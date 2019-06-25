@@ -35,6 +35,15 @@ const UserType = new GraphQLObjectType({
     })
 })
 
+const ChatRoomType = new GraphQLObjectType({
+    name: 'ChatRoom',
+    fields: () => ({
+        id: {type: GraphQLID}, 
+        userIDs: {type: new GraphQLList(GraphQLID)}, 
+        messages: {type: new GraphQLList(new GraphQLList(GraphQLString))}
+    })
+})
+
 const RootQuery = new GraphQLObjectType({
     name: 'RootQuery',
     fields: () => ({
@@ -52,7 +61,19 @@ const RootQuery = new GraphQLObjectType({
                 let user = db.users.find(user => user.id === args.id);
                 return user;
             }
-        }
+        },
+
+        chatrooms: {
+            type: new GraphQLList(ChatRoomType),
+            args: {userID: {type: GraphQLID}},
+            resolve(parent, args){
+                let chatrooms = db.chatrooms.filter(chatroom => {
+                    return chatroom.userIDs.includes(args.userID);
+                })
+
+                return chatrooms;
+            }
+        },
     })
 })
 
