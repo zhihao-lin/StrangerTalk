@@ -1,4 +1,4 @@
-import {  createStackNavigator } from "react-navigation";
+import {  createStackNavigator, createAppContainer } from "react-navigation";
 import MapScreen from '../screens/mapScreen'
 import ChatRoomScreen from '../screens/chatRoomScreen'
 
@@ -41,4 +41,4 @@ const mainScreenNavigation = createStackNavigator(
 
 
 
-export default mainScreenNavigation;
+export default createAppContainer(mainScreenNavigation);
