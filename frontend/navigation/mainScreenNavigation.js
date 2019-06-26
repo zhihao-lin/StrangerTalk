@@ -1,11 +1,12 @@
 import {  createStackNavigator, createAppContainer } from "react-navigation";
 import MapScreen from '../screens/mapScreen'
 import ChatRoomScreen from '../screens/chatRoomScreen'
+import MyDrawerNavigator from './DrawerNavigation'
 
 const mainScreenNavigation = createStackNavigator(
     {
-        MapScreen: {
-            screen: MapScreen,
+        MyDrawerNavigator: {
+            screen: MyDrawerNavigator,
             navigationOptions: ({ navigation, screenProps }) => ({
                 header: null,
             }),
@@ -35,7 +36,7 @@ const mainScreenNavigation = createStackNavigator(
             }
         },
         
-        initialRouteName: 'MapScreen',
+        initialRouteName: 'MyDrawerNavigator',
     }
 );
 
