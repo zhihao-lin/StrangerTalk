@@ -13,7 +13,7 @@ const {
 } = graphql;
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const SALT_ROUNDS = 2;
+//const SALT_ROUNDS = 2;
 const SECRET = "just_a_random_secret";
 const hash = text => bcrypt.hash(text, SALT_ROUNDS);
 const distance_threshold = 100;
@@ -136,6 +136,7 @@ const Mutation = new GraphQLObjectType({
         if (!user) throw new Error("Account Not Exists");
         const passwordIsValid = bcrypt.compare(login.password, login.password);
         if (!passwordIsValid) throw new Error("Wrong Password");
+
         return { token: createToken(login.name) };
       }
     },
