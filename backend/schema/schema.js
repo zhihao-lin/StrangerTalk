@@ -74,8 +74,11 @@ const RootQuery = new GraphQLObjectType({
     user: {
       type: UserType,
       args: { id: { type: GraphQLID } },
-      resolve(parent, args) {
+      resolve(parent, args, { context }) {
+        if (!context) throw new Error("Plz Log In First");
+        console.log(context);
         let user = db.users.find(user => user.id === args.id);
+
         return user;
       }
     },
@@ -136,7 +139,8 @@ const Mutation = new GraphQLObjectType({
         if (!user) throw new Error("Account Not Exists");
         const passwordIsValid = bcrypt.compare(login.password, login.password);
         if (!passwordIsValid) throw new Error("Wrong Password");
-
+        const me = jwt.verify(createToken(login.name), SECRET);
+        console.log(me);
         return { token: createToken(login.name) };
       }
     },
