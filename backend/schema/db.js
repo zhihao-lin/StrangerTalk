@@ -34,7 +34,11 @@ let chatRooms = [
   {
     id: "chatroom_0",
     userIDs: ["0", "1"],
-    messages: [["0", "Hi"], ["1", "How are you"], ["0", "fine, and you?"]]
+    messages: [
+      ["0", "Hi"], 
+      ["1", "How are you"], 
+      ["0", "fine, and you?"]
+    ]
   },
 
   {
