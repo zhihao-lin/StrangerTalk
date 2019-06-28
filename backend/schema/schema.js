@@ -85,12 +85,32 @@ const RootQuery = new GraphQLObjectType({
 
     user: {
       type: UserType,
-
       args: { name: { type: GraphQLString } },
       async resolve(parent, args, context) {
         let user = await User.findOne({ name: args.name });
-
         return user;
+      }
+    },
+
+    login: {
+      type: Token,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) }
+      },
+      async resolve(parent, args) {
+        const user = await User.findOne({name: args.name});
+
+        if (user === null) {
+          return { token: "UserNotExist" };
+
+        } else if (user.password === args.password) {
+          return { token: createToken(user.name) };
+          
+        } else {
+          return { token: "WrongPassword" };
+
+        }
       }
     },
 
@@ -154,25 +174,6 @@ const Mutation = new GraphQLObjectType({
       }
     },
 
-    login: {
-      type: Token,
-      args: {
-        name: { type: new GraphQLNonNull(GraphQLString) },
-        password: { type: new GraphQLNonNull(GraphQLString) }
-      },
-      resolve(parent, args) {
-        let login = {
-          name: args.name,
-          password: args.password
-        };
-        const user = db.users.find(user => user.name === login.name);
-        if (!user) throw new Error("Account Not Exists");
-        const passwordIsValid = bcrypt.compare(login.password, login.password);
-        if (!passwordIsValid) throw new Error("Wrong Password");
-        return { token: createToken(login.name) };
-      }
-    },
-
     sendMessage: {
       type: ChatRoomType,
       args: {
@@ -199,6 +200,7 @@ const Mutation = new GraphQLObjectType({
             console.log(err);
           });
           return chatRoomData;
+
         } else {
           chatRoom.from.push(args.from);
           chatRoom.messages.push(args.message);
