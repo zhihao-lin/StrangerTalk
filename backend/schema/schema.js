@@ -94,26 +94,29 @@ const RootQuery = new GraphQLObjectType({
         return user;
       }
     },
-    /*
-    login: {
-      type: Token,
-      args: {
-        name: { type: new GraphQLNonNull(GraphQLString) },
-        password: { type: new GraphQLNonNull(GraphQLString) }
-      },
-      async resolve(parent, args) {
-        const user = await User.findOne({ name: args.name });
 
-        if (user === null) {
-          return { token: "UserNotExist" };
-        } else if (user.password === args.password) {
-          return { token: createToken(user.name) };
-        } else {
-          return { token: "WrongPassword" };
-        }
-      }
-    },
-*/
+    // login: {
+    //   type: Token,
+    //   args: {
+    //     name: { type: new GraphQLNonNull(GraphQLString) },
+    //     password: { type: new GraphQLNonNull(GraphQLString) }
+    //   },
+    //   async resolve(parent, args) {
+    //     const user = await User.findOne({name: args.name});
+
+    //     if (user === null) {
+    //       return { token: "UserNotExist" };
+
+    //     } else if (user.password === args.password) {
+    //       return { token: createToken(user.name) };
+
+    //     } else {
+    //       return { token: "WrongPassword" };
+
+    //     }
+    //   }
+    // },
+
     chatRooms: {
       type: new GraphQLList(ChatRoomType),
       args: { name: { type: GraphQLString } },
