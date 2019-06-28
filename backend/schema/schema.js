@@ -13,10 +13,11 @@ const {
 } = graphql;
 
 const User = require("./models/User");
-const ChatRoom  = require('./models/ChatRoom');
+const ChatRoom = require("./models/ChatRoom");
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+
 //const SALT_ROUNDS = 2;
 const SECRET = "just_a_random_secret";
 const hash = text => bcrypt.hash(text, SALT_ROUNDS);
@@ -43,8 +44,8 @@ const UserType = new GraphQLObjectType({
         let neighbors = await users.filter(user => {
           let distance = Math.sqrt(
             Math.pow(user.latitude - parent.latitude, 2) +
-            Math.pow(user.longitude - parent.longitude, 2)
-          )
+              Math.pow(user.longitude - parent.longitude, 2)
+          );
           return distance < distance_threshold && user.id !== parent.id;
         });
 
@@ -84,16 +85,18 @@ const RootQuery = new GraphQLObjectType({
 
     user: {
       type: UserType,
-      args: { name: {type: GraphQLString} },
-      async resolve(parent, args) {
-        let user = await User.findOne({name: args.name});
+
+      args: { name: { type: GraphQLString } },
+      async resolve(parent, args, context) {
+        let user = await User.findOne({ name: args.name });
+
         return user;
       }
     },
 
     chatRooms: {
       type: new GraphQLList(ChatRoomType),
-      args: { name: {type: GraphQLString} },
+      args: { name: { type: GraphQLString } },
       async resolve(parent, args) {
         let chatRoomsAll = await ChatRoom.find({});
         let chatRooms = chatRoomsAll.filter(room => {
@@ -134,7 +137,7 @@ const Mutation = new GraphQLObjectType({
 
           const new_user = new User(user);
           new_user.save(err => {
-            if (err) console.log('Error: Failed to create new User');
+            if (err) console.log("Error: Failed to create new User");
           });
           return user;
         }
@@ -144,10 +147,10 @@ const Mutation = new GraphQLObjectType({
     removeUser: {
       type: UserType,
       args: {
-        name: {type: new GraphQLNonNull(GraphQLString)}
+        name: { type: new GraphQLNonNull(GraphQLString) }
       },
-      resolve(parent, args){
-        return User.deleteOne({name: args.name});
+      resolve(parent, args) {
+        return User.deleteOne({ name: args.name });
       }
     },
 
@@ -166,8 +169,6 @@ const Mutation = new GraphQLObjectType({
         if (!user) throw new Error("Account Not Exists");
         const passwordIsValid = bcrypt.compare(login.password, login.password);
         if (!passwordIsValid) throw new Error("Wrong Password");
-        const me = jwt.verify(createToken(login.name), SECRET);
-        console.log(me);
         return { token: createToken(login.name) };
       }
     },
@@ -182,10 +183,7 @@ const Mutation = new GraphQLObjectType({
       async resolve(parent, args) {
         let chatRoomsAll = await ChatRoom.find({});
         let chatRoom = chatRoomsAll.find(room => {
-          return (
-            room.names.includes(args.from) &&
-            room.names.includes(args.to)
-          );
+          return room.names.includes(args.from) && room.names.includes(args.to);
         });
 
         if (chatRoom === undefined) {
@@ -197,21 +195,22 @@ const Mutation = new GraphQLObjectType({
 
           const newChatRoom = new ChatRoom(chatRoomData);
           newChatRoom.save(err => {
-            console.log('Error: Failed to save ChatRoom');
+            console.log("Error: Failed to save ChatRoom");
             console.log(err);
           });
           return chatRoomData;
-
         } else {
           chatRoom.from.push(args.from);
           chatRoom.messages.push(args.message);
 
-          await ChatRoom.updateOne({names: chatRoom.names}, {from: chatRoom.from, messages: chatRoom.messages})
+          await ChatRoom.updateOne(
+            { names: chatRoom.names },
+            { from: chatRoom.from, messages: chatRoom.messages }
+          );
           return chatRoom;
         }
       }
-    },
-
+    }
   })
 });
 
