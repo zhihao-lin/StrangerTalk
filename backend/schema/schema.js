@@ -89,7 +89,7 @@ const RootQuery = new GraphQLObjectType({
       args: { name: { type: GraphQLString } },
       async resolve(parent, args, context) {
         console.log(context);
-        if (!context) throw new Error("Account Not Exists");
+        if (context.me == null) throw new Error("please log in");
         let user = await User.findOne({ name: args.name });
         return user;
       }

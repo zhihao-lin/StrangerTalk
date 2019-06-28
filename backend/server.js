@@ -13,7 +13,21 @@ app.use(
   graphqlHTTP(req => ({
     schema,
     graphiql: true,
-    context: jwt.verify(req.headers["token"], SECRET)
+    context: (() => {
+      const token = req.headers["token"];
+      if (token) {
+        try {
+          // 2. 檢查 token + 取得解析出的資料
+          const me = jwt.verify(token, SECRET);
+          // 3. 放進 context
+          return { me };
+        } catch (e) {
+          throw new Error("Your session expired. Sign in again.");
+        }
+      }
+      // 如果沒有 token 就回傳空的 context 出去
+      return {};
+    })(req)
   }))
 );
 
