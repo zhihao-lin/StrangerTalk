@@ -19,12 +19,12 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 //const SALT_ROUNDS = 2;
-const SECRET = "just_a_random_secret";
+const SECRET = "webfinal";
 const hash = text => bcrypt.hash(text, SALT_ROUNDS);
 const distance_threshold = 100;
 const createToken = name =>
   jwt.sign({ name }, SECRET, {
-    expiresIn: "1d"
+    expiresIn: "3d"
   });
 
 const UserType = new GraphQLObjectType({
@@ -68,7 +68,8 @@ const ChatRoomType = new GraphQLObjectType({
 const Token = new GraphQLObjectType({
   name: "Token",
   fields: () => ({
-    token: { type: GraphQLString }
+    token: { type: GraphQLString },
+    id: { type: GraphQLString }
   })
 });
 
@@ -88,6 +89,8 @@ const RootQuery = new GraphQLObjectType({
 
       args: { name: { type: GraphQLString } },
       async resolve(parent, args, context) {
+        console.log(context);
+        if (!context) throw new Error("Account Not Exists");
         let user = await User.findOne({ name: args.name });
 
         return user;
@@ -160,16 +163,24 @@ const Mutation = new GraphQLObjectType({
         name: { type: new GraphQLNonNull(GraphQLString) },
         password: { type: new GraphQLNonNull(GraphQLString) }
       },
-      resolve(parent, args) {
+      async resolve(parent, args) {
         let login = {
           name: args.name,
           password: args.password
         };
-        const user = db.users.find(user => user.name === login.name);
+        let user = await User.findOne({ name: args.name });
         if (!user) throw new Error("Account Not Exists");
-        const passwordIsValid = bcrypt.compare(login.password, login.password);
-        if (!passwordIsValid) throw new Error("Wrong Password");
-        return { token: createToken(login.name) };
+        const passwordIsValid = await bcrypt.compare(
+          login.password,
+          user.password
+        );
+        if (login.password !== user.password) throw new Error("Wrong Password");
+
+        let token = await {
+          token: createToken(login.name),
+          id: user.id
+        };
+        return token;
       }
     },
 

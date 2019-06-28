@@ -3,8 +3,9 @@ const cors = require("cors");
 const graphqlHTTP = require("express-graphql");
 const mongoose = require("mongoose");
 const schema = require("./schema/schema");
-
+const jwt = require("jsonwebtoken");
 const app = express();
+const SECRET = "webfinal";
 app.use(cors());
 
 app.use(
@@ -12,7 +13,7 @@ app.use(
   graphqlHTTP(req => ({
     schema,
     graphiql: true,
-    context: { user: req.headers }
+    context: jwt.verify(req.headers["token"], SECRET)
   }))
 );
 
