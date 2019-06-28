@@ -8,11 +8,17 @@ const ChatroomNavigator = createStackNavigator(
   {
   ChatRoomScreen: {
     screen: ChatRoomScreen,
-    navigationOptions: ({ navigation, screenProps }) => ({
+    navigationOptions: ({ navigation, screenProps }) => (
+      (console.log(navigation.state)),
+      {
     })
   },
   ChatRoomDetail: {
-    screen: ChatRoomDetail
+    screen: ChatRoomDetail,
+    navigationOptions: ({ navigation, screenProps }) => (
+      (console.log(navigation.state)),
+      {
+    })
   },
   },
   {

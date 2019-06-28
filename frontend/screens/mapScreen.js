@@ -10,7 +10,9 @@ import MapView from "react-native-maps";
 import Geolocation from "Geolocation";
 import { Query } from "react-apollo";
 import { GET_USER_LOCATION } from "../graphql";
-import { Marker,Callout } from "react-native-maps";
+import { Marker, Callout, CalloutSubview } from "react-native-maps";
+import { TextInput } from "react-native-gesture-handler";
+import { button } from 'react-native'
 
 export default class MapScreen extends Component {
   constructor(props) {
@@ -84,6 +86,7 @@ export default class MapScreen extends Component {
                   latitudeDelta: 0.01,
                   longitudeDelta: 0.01
                 }}
+
               >
                 <Marker
                   pinColor={"green"}
@@ -93,22 +96,25 @@ export default class MapScreen extends Component {
                   }}
                 >
                   <Callout>
-                    <View style={{width:100,height:100,backgroundColor:'red'}}>
-                    <View style={{width:100,height:100,backgroundColor:'red'}}>
+                    <View style={{ width: 100, height: 100, backgroundColor: '#ff9317', marginBottom: 50 }}>
+                      <Text>Name</Text>
+                      <Text>Description</Text>
                     </View>
-                    </View>
+                    <CalloutSubview style={{ flex: 1 }} onPress={() => {console.log(this.props.navigation)
+                      this.props.navigation.navigate('ChatRoomDetail')}}>
+                      <TouchableOpacity style={{   
+                        borderRadius: 5,
+                        alignItems:'center',
+                        justifyContent:'center',
+                        backgroundColor: 'red' }} ref={button => this.button = button}>
+                        <Text style={{marginVertical:5,  fontFamily: 'Arial', color:'white'}}>傳送訊息</Text>
+                      </TouchableOpacity>
+                    </CalloutSubview>
                   </Callout>
                 </Marker>
-
                 {marker}
               </MapView>
 
-              <TouchableOpacity
-                style={styles.button}
-                onPress={this.getLocation.bind(this)}
-              >
-                <Text style={styles.buttonText}>Where am I ?</Text>
-              </TouchableOpacity>
             </SafeAreaView>
           );
         }}

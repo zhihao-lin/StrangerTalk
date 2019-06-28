@@ -19,14 +19,19 @@ const MyDrawerNavigator = createDrawerNavigator(
   {
     MapScreen: {
       screen: MapScreen,
-      navigationOptions: ({ navigation, screenProps }) => ({
+      navigationOptions: ({ navigation, screenProps }) => (
+        (console.log(navigation.state)),
+        {
         title:'地圖'
     })
     },
     ChatRoomStack: {
       screen: ChatroomNavigator,
-      navigationOptions: ({ navigation, screenProps }) => ({
-        title:'聊天室'
+      navigationOptions: ({ navigation, screenProps }) => (
+        (console.log(navigation.state)),
+        {
+        title:'聊天室',
+        
     })
     }
   },

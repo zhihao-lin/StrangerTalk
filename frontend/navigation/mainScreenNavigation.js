@@ -5,17 +5,20 @@ import MyDrawerNavigator from './DrawerNavigation'
 import { Text,Image} from 'react-native'
 import React from 'react'
 import { TouchableOpacity } from "react-native-gesture-handler";
-
+import ChatRoomDetail from '../screens/chatRoomDetail'
 const mainScreenNavigation = createStackNavigator(
     {
         MyDrawerNavigator: {
             screen: MyDrawerNavigator,
-            navigationOptions: ({ navigation, screenProps }) => ({
+            navigationOptions: ({ navigation, screenProps }) => (
+                (console.log(navigation.state)),
+                {
                 headerStyle:{
                     backgroundColor:'#ff9317'
                 },
             })
         },
+    
         
         //Add New Screen Here
     },
