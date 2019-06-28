@@ -10,7 +10,7 @@ import MapView from "react-native-maps";
 import Geolocation from "Geolocation";
 import { Query } from "react-apollo";
 import { GET_USER_LOCATION } from "../graphql";
-import { Marker } from "react-native-maps";
+import { Marker,Callout } from "react-native-maps";
 
 export default class MapScreen extends Component {
   constructor(props) {
@@ -75,7 +75,6 @@ export default class MapScreen extends Component {
           const marker = this.renderMarker(data.users);
           return (
             <SafeAreaView style={styles.container}>
-              <View style={styles.bar} />
 
               <MapView
                 style={styles.map}
@@ -92,7 +91,15 @@ export default class MapScreen extends Component {
                     latitude: this.state.local.latitude,
                     longitude: this.state.local.longitude
                   }}
-                />
+                >
+                  <Callout>
+                    <View style={{width:100,height:100,backgroundColor:'red'}}>
+                    <View style={{width:100,height:100,backgroundColor:'red'}}>
+                    </View>
+                    </View>
+                  </Callout>
+                </Marker>
+
                 {marker}
               </MapView>
 
@@ -117,12 +124,11 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   map: {
-    width: 350,
-    height: 500
+    flex: 1,
+    width: 500
   },
   button: {
     marginTop: 50,
-
     width: 100,
     height: 35,
     backgroundColor: "#00AD65",
@@ -141,10 +147,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     lineHeight: 20
   },
-  bar: {
-    width: 350,
-    height: 70,
 
-    backgroundColor: "#ff9317"
-  }
 });
