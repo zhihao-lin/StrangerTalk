@@ -90,7 +90,7 @@ const RootQuery = new GraphQLObjectType({
       args: { name: { type: GraphQLString } },
       async resolve(parent, args, context) {
         console.log(context);
-        if (!context) throw new Error("Account Not Exists");
+        if (!context) throw new Error("Please log in first.");
         let user = await User.findOne({ name: args.name });
 
         return user;
@@ -183,7 +183,32 @@ const Mutation = new GraphQLObjectType({
         return token;
       }
     },
+    login: {
+      type: Token,
+      args: {
+        name: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) }
+      },
+      async resolve(parent, args) {
+        let login = {
+          name: args.name,
+          password: args.password
+        };
+        let user = await User.findOne({ name: args.name });
+        if (!user) throw new Error("Account Not Exists");
+        const passwordIsValid = await bcrypt.compare(
+          login.password,
+          user.password
+        );
+        if (login.password !== user.password) throw new Error("Wrong Password");
 
+        let token = await {
+          token: createToken(login.name),
+          id: user.id
+        };
+        return token;
+      }
+    },
     sendMessage: {
       type: ChatRoomType,
       args: {
