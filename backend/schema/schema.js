@@ -156,15 +156,15 @@ const Mutation = new GraphQLObjectType({
       async resolve(parent, args, context){
         if (context.me == null) throw new Error("please log in");
         if (context.me.name != args.name) throw new Error("You are not authorized");
-        let user = await User.find({name: args.name});
+        let user = await User.findOne({name: args.name});
         if (user === null) {
           throw new Error("User can't be found");
         } else {
           user.latitude = args.latitude;
           user.longitude = args.longitude;
-          User.updateOne(
+          await User.updateOne(
             {name: user.name},
-            {latitude: user.latitude, longitude: user.latitude}
+            {latitude: user.latitude, longitude: user.longitude}
           );
           return user;
         }
