@@ -1,25 +1,30 @@
 import { ApolloProvider } from "react-apollo";
-import ApolloClient from "apollo-boost";
 import React, { Component } from "react";
 import { AsyncStorage } from "react-native";
-import { createHttpLink } from "apollo-link-http";
+import { ApolloClient, HttpLink, InMemoryCache } from 'apollo-boost'
 import { setContext } from "apollo-link-context";
-const httpLink = createHttpLink({
-  uri: "http://localhost:4000/graphql"
-});
 
-const authLink = setContext(async (req, { headers }) => {
-  const token = await localStorage.getItem("token");
+
+
+
+const authLink = setContext((_, { headers }) => {
+  //const token = localStorage.getItem("token");
   return {
     headers: {
       ...headers,
-      token: token ? `Bearer ${token}` : ""
+      //token: token ? `Bearer ${token}` : ""
     }
   };
 });
+
+
+
 const client = new ApolloClient({
-  link: authLink.concat(httpLink)
-});
+    link: new HttpLink({ uri: 'http://localhost:4000/graphql' }),
+    cache: new InMemoryCache()
+
+  });
+
 
 export default function ApolloWrapper(CMP) {
   return class MainWrapped extends Component {

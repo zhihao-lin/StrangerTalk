@@ -5,17 +5,19 @@ import MyDrawerNavigator from './DrawerNavigation'
 import { Text,Image} from 'react-native'
 import React from 'react'
 import { TouchableOpacity } from "react-native-gesture-handler";
-
+import ChatRoomDetail from '../screens/chatRoomDetail'
 const mainScreenNavigation = createStackNavigator(
     {
         MyDrawerNavigator: {
             screen: MyDrawerNavigator,
-            navigationOptions: ({ navigation, screenProps }) => ({
+            navigationOptions: ({ navigation, screenProps }) => (
+                {
                 headerStyle:{
                     backgroundColor:'#ff9317'
                 },
             })
         },
+    
         
         //Add New Screen Here
     },
@@ -25,7 +27,6 @@ const mainScreenNavigation = createStackNavigator(
             title: (navigation.state.index) ? '聊天室' : '地圖',
             gesturesEnabled: false,
             headerLeft: <TouchableOpacity onPress={() => {
-                console.log(navigation.state)
                 if (!navigation.state.isDrawerOpen) {
                     navigation.openDrawer();
                 } else {
