@@ -47,7 +47,7 @@ export default class chatRoomItem extends React.Component {
                         data : this.props.data
                 }) }}
             >
-            <Text></Text>
+            <Text>{this.props.data.names}</Text>
             {console.log(this.props.data.names)}
             </TouchableOpacity>
         );

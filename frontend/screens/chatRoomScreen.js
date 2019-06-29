@@ -5,22 +5,33 @@ import {
   View,
   SafeAreaView,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  AsyncStorage
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import ChatRoomItem from './component/chatRoomItem'
 import { GET_CHAT_ROOM_DETAIL } from '../graphql'
 import { Query } from 'react-apollo'
 
+
+
 export default class ChatRoomScreen extends React.Component {
-  state = {
-    messages: []
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      messages: [],
+      username:''
+    };
+    AsyncStorage.getItem('name').then((name) => {
+      console.log(name)
+      this.setState({username:name})
+   })
+  }
 
   render() {
     return (
       <Query query={GET_CHAT_ROOM_DETAIL} fetchPolicy={"network-only"}
-        variables={{ name: "James" }}>
+        variables={{ name:this.state.username  }}>
         {({ loading, error, data }) => {
           if(loading) return(null);
           console.log(data.chatRooms)
