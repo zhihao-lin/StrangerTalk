@@ -20,7 +20,6 @@ const MyDrawerNavigator = createDrawerNavigator(
     MapScreen: {
       screen: MapScreen,
       navigationOptions: ({ navigation, screenProps }) => (
-        (console.log(navigation.state)),
         {
         title:'地圖'
     })
@@ -28,7 +27,6 @@ const MyDrawerNavigator = createDrawerNavigator(
     ChatRoomStack: {
       screen: ChatroomNavigator,
       navigationOptions: ({ navigation, screenProps }) => (
-        (console.log(navigation.state)),
         {
         title:'聊天室',
         

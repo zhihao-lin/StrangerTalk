@@ -11,7 +11,6 @@ const mainScreenNavigation = createStackNavigator(
         MyDrawerNavigator: {
             screen: MyDrawerNavigator,
             navigationOptions: ({ navigation, screenProps }) => (
-                (console.log(navigation.state)),
                 {
                 headerStyle:{
                     backgroundColor:'#ff9317'
@@ -28,7 +27,6 @@ const mainScreenNavigation = createStackNavigator(
             title: (navigation.state.index) ? '聊天室' : '地圖',
             gesturesEnabled: false,
             headerLeft: <TouchableOpacity onPress={() => {
-                console.log(navigation.state)
                 if (!navigation.state.isDrawerOpen) {
                     navigation.openDrawer();
                 } else {

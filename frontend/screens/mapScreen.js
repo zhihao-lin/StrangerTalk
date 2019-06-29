@@ -13,6 +13,8 @@ import { GET_USER_LOCATION } from "../graphql";
 import { Marker, Callout, CalloutSubview } from "react-native-maps";
 import { TextInput } from "react-native-gesture-handler";
 import { button } from 'react-native'
+import {AsyncStorage} from 'react-native'
+
 
 export default class MapScreen extends Component {
   constructor(props) {

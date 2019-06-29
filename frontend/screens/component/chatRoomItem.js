@@ -16,7 +16,9 @@ export default class chatRoomItem extends React.Component {
         return (
             <TouchableOpacity
                 style={{ flex: 1, flexDirection: 'row', backgroundColor: 'grey', height: 100, alignItems: 'stretch' }}
-                onPress={() => { this.props.navigation.push('ChatRoomDetail') }}
+                onPress={() => { this.props.navigation.push('ChatRoomDetail',{
+                        data : this.props.data
+                }) }}
             >
 
             </TouchableOpacity>
