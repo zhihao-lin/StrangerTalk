@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 export default gql`
-query {
-  user(name:"Allen") {
+query ($name:String!){
+  user(name:$name) {
     id
     name
     age

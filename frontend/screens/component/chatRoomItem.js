@@ -5,36 +5,33 @@ import {
     View,
     SafeAreaView,
     Text,
-    TouchableOpacity
+    TouchableOpacity,
+    AsyncStorage
 } from "react-native";
 
 let username = ''
 
 export default class chatRoomItem extends React.Component {
-    state = {
-        messages: []
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+          messages: [],
+          username:''
+        };
+        AsyncStorage.getItem('name').then((name) => {
+          console.log(name)
+          this.setState({username:name})
+       })
+      }
+    
 
-    componentDidMount(){
-        this._retrieveData()
-    }
 
-    _retrieveData = async () => {
-        try {
-          const value = await AsyncStorage.getItem('name');
-          if (value !== null) {
-            // We have data!!
-            username = value
-            console.log(username);
-          }
-        } catch (error) {
-          // Error retrieving data
-        }
-      };
 
     render() {
         const opponent = this.props.data.names.map( item => {
-            if(item === username){
+            console.log(item)
+            console.log(this.state.username)
+            if(item === this.state.username){
                 return;
             }
             else return item
@@ -47,8 +44,7 @@ export default class chatRoomItem extends React.Component {
                         data : this.props.data
                 }) }}
             >
-            <Text>{this.props.data.names}</Text>
-            {console.log(this.props.data.names)}
+            <Text>{opponent}</Text>
             </TouchableOpacity>
         );
     }

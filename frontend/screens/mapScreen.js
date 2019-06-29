@@ -90,7 +90,7 @@ export default class MapScreen extends Component {
                   <CalloutSubview style={{ flex: 1 }} onPress={() => {
                     console.log(this.props.navigation)
                     this.props.navigation.navigate('ChatRoomDetail',{
-                      data : messages})
+                      data : messages?messages:'' })
                    }}>
                     <TouchableOpacity style={{
                       borderRadius: 5,
@@ -115,7 +115,7 @@ export default class MapScreen extends Component {
 
   render() {
     return (
-      <Query query={GET_USER_LOCATION} fetchPolicy={"network-only"}>
+      <Query query={GET_USER_LOCATION} fetchPolicy={"network-only"} variables={{name:this.state.username}}>
         {({ loading, error, data }) => {
           if (loading) return null;
           if (error) return `Error! ${error.message}`;
