@@ -22,8 +22,8 @@ const jwt = require("jsonwebtoken");
 const SECRET = "webfinal";
 const hash = text => bcrypt.hash(text, SALT_ROUNDS);
 const distance_threshold = 100;
-const createToken = name =>
-  jwt.sign({ name }, SECRET, {
+const createToken = ({ name, id }) =>
+  jwt.sign({ name, id }, SECRET, {
     expiresIn: "3d"
   });
 
@@ -69,7 +69,8 @@ const Token = new GraphQLObjectType({
   name: "Token",
   fields: () => ({
     token: { type: GraphQLString },
-    id: { type: GraphQLString }
+    id: { type: GraphQLString },
+    name: { type: GraphQLString }
   })
 });
 
@@ -78,7 +79,8 @@ const RootQuery = new GraphQLObjectType({
   fields: () => ({
     users: {
       type: new GraphQLList(UserType),
-      async resolve(parent, args) {
+      async resolve(parent, args, context) {
+        if (context.me == null) throw new Error("please log in");
         let users = await User.find();
         return users;
       }
@@ -88,39 +90,17 @@ const RootQuery = new GraphQLObjectType({
       type: UserType,
       args: { name: { type: GraphQLString } },
       async resolve(parent, args, context) {
-        console.log(context);
         if (context.me == null) throw new Error("please log in");
         let user = await User.findOne({ name: args.name });
         return user;
       }
     },
 
-    // login: {
-    //   type: Token,
-    //   args: {
-    //     name: { type: new GraphQLNonNull(GraphQLString) },
-    //     password: { type: new GraphQLNonNull(GraphQLString) }
-    //   },
-    //   async resolve(parent, args) {
-    //     const user = await User.findOne({name: args.name});
-
-    //     if (user === null) {
-    //       return { token: "UserNotExist" };
-
-    //     } else if (user.password === args.password) {
-    //       return { token: createToken(user.name) };
-
-    //     } else {
-    //       return { token: "WrongPassword" };
-
-    //     }
-    //   }
-    // },
-
     chatRooms: {
       type: new GraphQLList(ChatRoomType),
       args: { name: { type: GraphQLString } },
-      async resolve(parent, args) {
+      async resolve(parent, args, context) {
+        if (context.me == null) throw new Error("please log in");
         let chatRoomsAll = await ChatRoom.find({});
         let chatRooms = chatRoomsAll.filter(room => {
           return room.names.includes(args.name);
@@ -144,7 +124,8 @@ const Mutation = new GraphQLObjectType({
         latitude: { type: new GraphQLNonNull(GraphQLFloat) },
         longitude: { type: new GraphQLNonNull(GraphQLFloat) }
       },
-      resolve(parent, args) {
+      resolve(parent, args, context) {
+        if (context.me == null) throw new Error("please log in");
         const user = db.users.find(e => e.name == args.name);
         if (user) {
           throw new Error("User name already exist!");
@@ -172,7 +153,8 @@ const Mutation = new GraphQLObjectType({
       args: {
         name: { type: new GraphQLNonNull(GraphQLString) }
       },
-      resolve(parent, args) {
+      resolve(parent, args, context) {
+        if (context.me == null) throw new Error("please log in");
         return User.deleteOne({ name: args.name });
       }
     },
@@ -197,8 +179,9 @@ const Mutation = new GraphQLObjectType({
         if (login.password !== user.password) throw new Error("Wrong Password");
 
         let token = await {
-          token: createToken(login.name),
-          id: user.id
+          token: createToken(user),
+          id: user.id,
+          name: user.name
         };
         return token;
       }
@@ -211,7 +194,8 @@ const Mutation = new GraphQLObjectType({
         to: { type: new GraphQLNonNull(GraphQLString) },
         message: { type: new GraphQLNonNull(GraphQLString) }
       },
-      async resolve(parent, args) {
+      async resolve(parent, args, context) {
+        if (context.me == null) throw new Error("please log in");
         let chatRoomsAll = await ChatRoom.find({});
         let chatRoom = chatRoomsAll.find(room => {
           return room.names.includes(args.from) && room.names.includes(args.to);
