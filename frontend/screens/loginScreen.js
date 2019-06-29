@@ -61,7 +61,6 @@ export default class loginScreen extends React.Component {
                                         AsyncStorage.setItem( "token", data.login.token);
                                         AsyncStorage.setItem( "id", data.login.id);
                                         AsyncStorage.setItem( "name", data.login.name);
-
                                     });
                                 }}
                                 narrow={true}
