@@ -21,7 +21,7 @@ const jwt = require("jsonwebtoken");
 //const SALT_ROUNDS = 2;
 const SECRET = "webfinal";
 const hash = text => bcrypt.hash(text, SALT_ROUNDS);
-const distance_threshold = 100;
+const distance_threshold = 0.01;
 const createToken = ({ name, id }) =>
   jwt.sign({ name, id }, SECRET, {
     expiresIn: "3d"
@@ -79,8 +79,7 @@ const RootQuery = new GraphQLObjectType({
   fields: () => ({
     users: {
       type: new GraphQLList(UserType),
-      async resolve(parent, args, context) {
-        if (context.me == null) throw new Error("please log in");
+      async resolve(parent, args) {
         let users = await User.find();
         return users;
       }
@@ -124,8 +123,7 @@ const Mutation = new GraphQLObjectType({
         latitude: { type: new GraphQLNonNull(GraphQLFloat) },
         longitude: { type: new GraphQLNonNull(GraphQLFloat) }
       },
-      resolve(parent, args, context) {
-        if (context.me == null) throw new Error("please log in");
+      resolve(parent, args) {
         const user = db.users.find(e => e.name == args.name);
         if (user) {
           throw new Error("User name already exist!");
@@ -155,6 +153,8 @@ const Mutation = new GraphQLObjectType({
       },
       resolve(parent, args, context) {
         if (context.me == null) throw new Error("please log in");
+        if (context.me.name != args.name)
+          throw new Error("You are not authorized");
         return User.deleteOne({ name: args.name });
       }
     },
@@ -196,11 +196,20 @@ const Mutation = new GraphQLObjectType({
       },
       async resolve(parent, args, context) {
         if (context.me == null) throw new Error("please log in");
+        if (context.me.name != args.from)
+          throw new Error("You are not authorized");
         let chatRoomsAll = await ChatRoom.find({});
         let chatRoom = chatRoomsAll.find(room => {
           return room.names.includes(args.from) && room.names.includes(args.to);
         });
-
+        let user1 = await User.findOne({ name: args.from });
+        let user2 = await User.findOne({ name: args.to });
+        let distance = Math.sqrt(
+          Math.pow(user1.latitude - user2.latitude, 2) +
+            Math.pow(user1.longitude - user2.longitude, 2)
+        );
+        if (distance > distance_threshold)
+          throw new Error("You guys are too far to chat");
         if (chatRoom === undefined) {
           let chatRoomData = {
             names: [args.from, args.to],
