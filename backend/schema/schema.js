@@ -51,6 +51,18 @@ const UserType = new GraphQLObjectType({
 
         return neighbors;
       }
+    },
+    friends: {
+      type: new GraphQLList(UserType),
+      async resolve(parent, args) {
+        let users = await User.find({});
+        let me = await User.findOne({ name: parent.name });
+        let friends = await users.filter(user => {
+          return me.friends.includes(user.name);
+        });
+
+        return friends;
+      }
     }
   })
 });
@@ -121,7 +133,8 @@ const Mutation = new GraphQLObjectType({
         password: { type: new GraphQLNonNull(GraphQLString) },
         description: { type: GraphQLString },
         latitude: { type: new GraphQLNonNull(GraphQLFloat) },
-        longitude: { type: new GraphQLNonNull(GraphQLFloat) }
+        longitude: { type: new GraphQLNonNull(GraphQLFloat) },
+        friends: { type: new GraphQLNonNull(GraphQLString) }
       },
       resolve(parent, args) {
         const user = db.users.find(e => e.name == args.name);
@@ -134,7 +147,8 @@ const Mutation = new GraphQLObjectType({
             password: args.password,
             description: args.description,
             latitude: args.latitude,
-            longitude: args.longitude
+            longitude: args.longitude,
+            friends: {}
           };
 
           const new_user = new User(user);
@@ -156,7 +170,7 @@ const Mutation = new GraphQLObjectType({
       async resolve(parent, args, context) {
         if (context.me == null) throw new Error("please log in");
 
-        if (context.me.name != args.name)
+        if (context.me.name != args.name && context.me.name !== "Boss")
           throw new Error("You are not authorized");
         let user = await User.findOne({ name: args.name });
 
@@ -183,7 +197,7 @@ const Mutation = new GraphQLObjectType({
       },
       resolve(parent, args, context) {
         if (context.me == null) throw new Error("please log in");
-        if (context.me.name != args.name)
+        if (context.me.name != args.name && context.me.name !== "Boss")
           throw new Error("You are not authorized");
         return User.deleteOne({ name: args.name });
       }
@@ -226,7 +240,7 @@ const Mutation = new GraphQLObjectType({
       },
       async resolve(parent, args, context) {
         if (context.me == null) throw new Error("please log in");
-        if (context.me.name != args.from)
+        if (context.me.name != args.from && context.me.name !== "Boss")
           throw new Error("You are not authorized");
         let chatRoomsAll = await ChatRoom.find({});
         let chatRoom = chatRoomsAll.find(room => {
