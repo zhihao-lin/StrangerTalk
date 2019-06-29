@@ -27,9 +27,21 @@ export default class MapScreen extends Component {
     };
   }
 
+  componentWillMount(){
+    this._storeData()
+  }
+
   componentDidMount() {
     this.getLocation();
   }
+
+  _storeData = async () => {
+    try {
+      await AsyncStorage.setItem('name','James');
+    } catch (error) {
+      // Error saving data
+    }
+  };
 
   getLocation() {
     Geolocation.getCurrentPosition(

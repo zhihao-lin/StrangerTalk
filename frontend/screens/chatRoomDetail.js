@@ -5,44 +5,62 @@ import { GET_CHAT_ROOM_DETAIL } from '../graphql'
 import { Query } from 'react-apollo'
 import { AsyncStorage } from 'react-native'
 
+let username = ''
+
 export default class chatRoomDetail extends React.Component {
   constructor(props) {
     super(props);
     this._setData = this._setData.bind(this)
     this.state = {
-      messages: []
+      messages: [],
     };
+    
   }
 
   componentWillMount() {
-    this.setState({
-      messages: [
-        {
-          text: 'Hello developer',
-          createdAt: new Date(),
-          user: {
-            _id: 1,
-            name: 'React Native',
-          },
-        },
-        {
-          text: 'Hello developer',
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: 'React ',
-          },
-        }
-      ],
-    })
+    this._retrieveData()
+    this._setData(this.props.navigation.getParam('data'))
   }
 
   _setData(data) {
-    const messages = data.messages.map(()=>{})
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }))
+    const messages=[]
+    for (i = data.messages.length-1; i >=0; i--) { 
+      const userId=0;
+      console.log(data.from[i])
+      console.log(username)
+      if(data.from[i] === username){
+        userId = 2
+      }
+      else{
+        userId = 1
+      }
+      const message={
+        _id: i,
+        text: data.messages[i],
+        createAt : new Date(),
+        user:{
+          _id: userId,
+          name: data.from[i]
+        }
+      }
+      messages.push(message)
+      console.log(message)
+    }  
+    this.setState( ({messages: messages}))
   }
+
+  _retrieveData = async () => {
+    try {
+      const Asyncname = await AsyncStorage.getItem('name');
+      if (Asyncname !== null) {
+        // We have data!!
+        username = Asyncname
+        console.log(username);
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
+  };
 
   onSend(messages = []) {
     this.setState(previousState => ({
@@ -51,9 +69,7 @@ export default class chatRoomDetail extends React.Component {
   }
 
   render() {
-    _setData(this.props.navigation.getParam('data')) 
-    console.log(this.props.navigation.getParam('data'))
-    console.log(this.state.messages)
+
     return (
       <GiftedChat
         messages={this.state.messages}
