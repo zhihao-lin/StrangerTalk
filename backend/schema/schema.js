@@ -124,8 +124,7 @@ const Mutation = new GraphQLObjectType({
         latitude: { type: new GraphQLNonNull(GraphQLFloat) },
         longitude: { type: new GraphQLNonNull(GraphQLFloat) }
       },
-      resolve(parent, args, context) {
-        if (context.me == null) throw new Error("please log in");
+      resolve(parent, args) {
         const user = db.users.find(e => e.name == args.name);
         if (user) {
           throw new Error("User name already exist!");
@@ -155,6 +154,8 @@ const Mutation = new GraphQLObjectType({
       },
       resolve(parent, args, context) {
         if (context.me == null) throw new Error("please log in");
+        if (context.me.name != args.name)
+          throw new Error("You are not authorized");
         return User.deleteOne({ name: args.name });
       }
     },
@@ -196,6 +197,8 @@ const Mutation = new GraphQLObjectType({
       },
       async resolve(parent, args, context) {
         if (context.me == null) throw new Error("please log in");
+        if (context.me.name != args.from)
+          throw new Error("You are not authorized");
         let chatRoomsAll = await ChatRoom.find({});
         let chatRoom = chatRoomsAll.find(room => {
           return room.names.includes(args.from) && room.names.includes(args.to);
