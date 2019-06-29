@@ -2,12 +2,10 @@ import { ApolloProvider } from "react-apollo";
 import ApolloClient from "apollo-boost";
 import React, { Component } from "react";
 import { AsyncStorage } from "react-native";
+import { createHttpLink } from "apollo-link-http";
+import { setContext } from "apollo-link-context";
 const httpLink = createHttpLink({
   uri: "http://localhost:4000/graphql"
-});
-
-const client = new ApolloClient({
-  link: authLink.concat(httpLink)
 });
 
 const authLink = setContext((_, { headers }) => {
@@ -18,6 +16,9 @@ const authLink = setContext((_, { headers }) => {
       token: token ? `Bearer ${token}` : ""
     }
   };
+});
+const client = new ApolloClient({
+  link: authLink.concat(httpLink)
 });
 
 export default function ApolloWrapper(CMP) {
