@@ -248,10 +248,24 @@ const Mutation = new GraphQLObjectType({
         });
         let user1 = await User.findOne({ name: args.from });
         let user2 = await User.findOne({ name: args.to });
+
         let distance = Math.sqrt(
           Math.pow(user1.latitude - user2.latitude, 2) +
             Math.pow(user1.longitude - user2.longitude, 2)
         );
+        let addfriend = user1.friends.find(friend => {
+          return friend == user2.name;
+        });
+
+        if (!addfriend) {
+          user1.friends.push(user2.name);
+
+          await User.updateOne(
+            { name: user1.name },
+            { friends: user1.friends }
+          );
+        }
+
         if (distance > distance_threshold)
           throw new Error("You guys are too far to chat");
         if (chatRoom === undefined) {
