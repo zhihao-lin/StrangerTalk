@@ -15,6 +15,7 @@ app.use(
     graphiql: true,
     context: (() => {
       const token = req.headers["token"];
+      console.log(req.headers)
       if (token) {
         try {
           const me = jwt.verify(token, SECRET);
