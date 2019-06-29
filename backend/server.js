@@ -3,8 +3,9 @@ const cors = require("cors");
 const graphqlHTTP = require("express-graphql");
 const mongoose = require("mongoose");
 const schema = require("./schema/schema");
-
+const jwt = require("jsonwebtoken");
 const app = express();
+const SECRET = "webfinal";
 app.use(cors());
 
 app.use(
@@ -12,7 +13,21 @@ app.use(
   graphqlHTTP(req => ({
     schema,
     graphiql: true,
-    context: { user: req.headers }
+    context: (() => {
+      const token = req.headers["token"];
+      if (token) {
+        try {
+          // 2. 檢查 token + 取得解析出的資料
+          const me = jwt.verify(token, SECRET);
+          // 3. 放進 context
+          return { me };
+        } catch (e) {
+          throw new Error("Your session expired. Sign in again.");
+        }
+      }
+      // 如果沒有 token 就回傳空的 context 出去
+      return {};
+    })(req)
   }))
 );
 
