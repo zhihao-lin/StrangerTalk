@@ -101,7 +101,7 @@ const RootQuery = new GraphQLObjectType({
       type: UserType,
       args: { name: { type: GraphQLString } },
       async resolve(parent, args, context) {
-        if (context.me == null) throw new Error("please log in");
+        //if (context.me == null) throw new Error("please log in");
         let user = await User.findOne({ name: args.name });
         return user;
       }

@@ -1,30 +1,42 @@
 import { ApolloProvider } from "react-apollo";
 import React, { Component } from "react";
-import AsyncStorage from 'react-native'
-import { ApolloClient, HttpLink, InMemoryCache } from 'apollo-boost'
-import { setContext } from "apollo-link-context";
+import { AsyncStorage } from 'react-native'
+import { ApolloClient } from 'apollo-client';
+import { createHttpLink } from 'apollo-link-http';
+import { setContext } from 'apollo-link-context';
+import { InMemoryCache } from 'apollo-cache-inmemory';
 
+const httpLink = createHttpLink({
+  uri: 'http://localhost:4000/graphql',
+});
 
+let token = ''
 
+setToken = async () => {
+    token  = await AsyncStorage.getItem('token');
+    console.log(token)
+}
 
 const authLink = setContext((_, { headers }) => {
-  const token = AsyncStorage.getItem("token");
+  // get the authentication token from local storage if it exists
+  setToken()
   console.log(token)
+  // return the headers to the context so httpLink can read them
   return {
     headers: {
       ...headers,
-      token: token ? `Bearer ${token}` : ""
+      token: token ? token: ''
     }
-  };
+  }
+});
+
+const client = new ApolloClient({
+  link: authLink.concat(httpLink),
+  cache: new InMemoryCache()
 });
 
 
 
-const client = new ApolloClient({
-    link: new HttpLink({ uri: 'http://localhost:4000/graphql' }),
-    cache: new InMemoryCache()
-
-  });
 
 
 export default function ApolloWrapper(CMP) {

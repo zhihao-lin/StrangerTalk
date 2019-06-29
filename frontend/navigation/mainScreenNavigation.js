@@ -6,8 +6,19 @@ import { Text,Image} from 'react-native'
 import React from 'react'
 import { TouchableOpacity } from "react-native-gesture-handler";
 import ChatRoomDetail from '../screens/chatRoomDetail'
+import LoginScreen from '../screens/loginScreen'
+
 const mainScreenNavigation = createStackNavigator(
     {
+        LoginScreen: {
+            screen: LoginScreen,
+            navigationOptions: ({ navigation, screenProps }) => (
+                {
+                headerStyle:{
+                    backgroundColor:'#ff9317'
+                },
+            })
+        },
         MyDrawerNavigator: {
             screen: MyDrawerNavigator,
             navigationOptions: ({ navigation, screenProps }) => (
@@ -22,6 +33,7 @@ const mainScreenNavigation = createStackNavigator(
         //Add New Screen Here
     },
     {
+        initialRouteName:'LoginScreen',
         defaultNavigationOptions: ({ navigation }) => ({
             headerStyle: { backgroundColor: 'green' },
             title: (navigation.state.index) ? '聊天室' : '地圖',

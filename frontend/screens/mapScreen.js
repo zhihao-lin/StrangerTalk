@@ -13,7 +13,8 @@ import { GET_USER_LOCATION } from "../graphql";
 import { Marker, Callout, CalloutSubview } from "react-native-maps";
 import { TextInput } from "react-native-gesture-handler";
 import { button } from 'react-native'
-import {AsyncStorage} from 'react-native'
+import { AsyncStorage } from 'react-native'
+import { GET_CHAT_ROOM_DETAIL } from '../graphql'
 
 
 export default class MapScreen extends Component {
@@ -23,25 +24,21 @@ export default class MapScreen extends Component {
       local: {
         longitude: 0,
         latitude: 0
-      }
+      },
+      username:''
     };
+    AsyncStorage.getItem('name').then((name) => {
+      console.log(name)
+      this.setState({username:name})
+   })
   }
 
-  componentWillMount(){
-    this._storeData()
+  componentWillMount() {
   }
 
   componentDidMount() {
     this.getLocation();
   }
-
-  _storeData = async () => {
-    try {
-      await AsyncStorage.setItem('name','James');
-    } catch (error) {
-      // Error saving data
-    }
-  };
 
   getLocation() {
     Geolocation.getCurrentPosition(
@@ -68,14 +65,48 @@ export default class MapScreen extends Component {
     const addMarker = users.map(user => {
       console.log(user);
       return (
-        <Marker
-          coordinate={{
-            latitude: user.latitude,
-            longitude: user.longitude
+        <Query query={GET_CHAT_ROOM_DETAIL} fetchPolicy={"network-only"}
+          variables={{ name: this.state.username }}>
+          {({ loading, error, data }) => {
+            if(loading) return (null)
+            const messages = data.chatRooms.find((item)=>{
+              if(item.names[0]===user.name || item.names[1]===user.name){
+                return item
+              }
+  
+            })
+            return (
+              <Marker
+                coordinate={{
+                  latitude: user.latitude,
+                  longitude: user.longitude
+                }}
+              >
+                <Callout>
+                  <View style={{ flex:1,padding:10, marginBottom: 20 }}>
+                    <Text>姓名:{user.name}</Text>
+                    <Text>自我介紹:{user.description}</Text>
+                  </View>
+                  <CalloutSubview style={{ flex: 1 }} onPress={() => {
+                    console.log(this.props.navigation)
+                    this.props.navigation.navigate('ChatRoomDetail',{
+                      data : messages?messages:'' })
+                   }}>
+                    <TouchableOpacity style={{
+                      borderRadius: 5,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: 'red'
+                    }} ref={button => this.button = button}>
+                      <Text style={{ marginVertical: 5, fontFamily: 'Arial', color: 'white' }}>傳送訊息</Text>
+                    </TouchableOpacity>
+                  </CalloutSubview>
+                </Callout>
+              </Marker>
+            );
           }}
-          title={user.name}
-          description={user.description}
-        />
+        </Query>
+
       );
     });
     console.log(addMarker);
@@ -84,11 +115,12 @@ export default class MapScreen extends Component {
 
   render() {
     return (
-      <Query query={GET_USER_LOCATION} fetchPolicy={"network-only"}>
+      <Query query={GET_USER_LOCATION} fetchPolicy={"network-only"} variables={{name:this.state.username}}>
         {({ loading, error, data }) => {
           if (loading) return null;
           if (error) return `Error! ${error.message}`;
-          const marker = this.renderMarker(data.users);
+          console.log(data)
+          const marker = this.renderMarker(data.user.neighbors);
           return (
             <SafeAreaView style={styles.container}>
 
@@ -109,22 +141,6 @@ export default class MapScreen extends Component {
                     longitude: this.state.local.longitude
                   }}
                 >
-                  <Callout>
-                    <View style={{ width: 100, height: 100, backgroundColor: '#ff9317', marginBottom: 50 }}>
-                      <Text>Name</Text>
-                      <Text>Description</Text>
-                    </View>
-                    <CalloutSubview style={{ flex: 1 }} onPress={() => {console.log(this.props.navigation)
-                      this.props.navigation.navigate('ChatRoomDetail')}}>
-                      <TouchableOpacity style={{   
-                        borderRadius: 5,
-                        alignItems:'center',
-                        justifyContent:'center',
-                        backgroundColor: 'red' }} ref={button => this.button = button}>
-                        <Text style={{marginVertical:5,  fontFamily: 'Arial', color:'white'}}>傳送訊息</Text>
-                      </TouchableOpacity>
-                    </CalloutSubview>
-                  </Callout>
                 </Marker>
                 {marker}
               </MapView>

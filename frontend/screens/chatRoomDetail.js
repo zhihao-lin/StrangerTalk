@@ -24,6 +24,7 @@ export default class chatRoomDetail extends React.Component {
 
   _setData(data) {
     const messages=[]
+    if(data === '') return;
     for (i = data.messages.length-1; i >=0; i--) { 
       const userId=0;
       console.log(data.from[i])

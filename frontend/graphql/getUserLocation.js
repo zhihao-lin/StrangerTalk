@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 export default gql`
-query {
-  users {
+query ($name:String!){
+  user(name:$name) {
     id
     name
     age
@@ -11,6 +11,11 @@ query {
     neighbors {
       id
       name
+      age
+      password
+      description
+      latitude
+      longitude     
     }
   } 
 }`;
