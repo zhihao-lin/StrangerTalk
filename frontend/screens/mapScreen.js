@@ -33,6 +33,16 @@ export default class MapScreen extends Component {
     });
   }
 
+  onLoad = (refetch) => {
+    this.props.navigation.addListener('didFocus', () => {
+      console.log("reload");
+      refetch().then((result) => {
+        console.log(result.data);
+        // console.log(result.data.doctorInfo.patientToDoctorSyncings);
+      });
+    });
+  }
+
   componentWillMount() {}
 
   componentDidMount() {
@@ -82,8 +92,9 @@ export default class MapScreen extends Component {
           fetchPolicy={"network-only"}
           variables={{ name: this.state.username }}
         >
-          {({ loading, error, data }) => {
+          {({ loading, error, data ,refetch}) => {
             if (loading) return null;
+            this.onLoad(refetch);
             const messages = data.chatRooms.find(item => {
               if (item.names[0] === user.name || item.names[1] === user.name) {
                 return item;
@@ -124,7 +135,8 @@ export default class MapScreen extends Component {
                     onPress={() => {
                       console.log(this.props.navigation);
                       this.props.navigation.navigate("ChatRoomDetail", {
-                        data: messages ? messages : ""
+                        data: messages ? messages : "",
+                        username: user.name
                       });
                     }}
                   >
@@ -167,9 +179,10 @@ export default class MapScreen extends Component {
         fetchPolicy={"network-only"}
         variables={{ name: this.state.username }}
       >
-        {({ loading, error, data }) => {
+        {({ loading, error, data ,refetch}) => {
           if (loading) return null;
           if (error) return `Error! ${error.message}`;
+          this.onLoad(refetch)
           console.log(data.user.friends);
           const marker = this.renderMarker(
             data.user.neighbors,

@@ -27,13 +27,24 @@ export default class ChatRoomScreen extends React.Component {
       this.setState({username:name})
    })
   }
+  
+  onLoad = (refetch) => {
+    this.props.navigation.addListener('didFocus', () => {
+      console.log("reload");
+      refetch().then((result) => {
+        console.log(result.data);
+        // console.log(result.data.doctorInfo.patientToDoctorSyncings);
+      });
+    });
+  }
 
   render() {
     return (
       <Query query={GET_CHAT_ROOMS} fetchPolicy={"network-only"}
         variables={{ name:this.state.username  }}>
-        {({ loading, error, data }) => {
+        {({ loading, error, data,refetch }) => {
           if(loading) return(null);
+          this.onLoad(refetch);
           console.log(data.chatRooms)
           const chatRoomItems = data.chatRooms.map((item)=>{
             console.log(item)
