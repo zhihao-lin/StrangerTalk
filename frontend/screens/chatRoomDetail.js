@@ -24,7 +24,9 @@ export default class chatRoomDetail extends React.Component {
   }
 
   componentWillMount() {
-    this._setData(this.props.navigation.getParam('data'))
+    if(this.props.navigation.getParam('data')){
+      this._setData(this.props.navigation.getParam('data'))
+    }
   }
 
   _setData(data) {
