@@ -12,6 +12,10 @@ cd StrangerTalk
 cd backend
 npm install
 npm start
+cd ../frontend/ios
+open frontend.xcodeproj with Xcode
+build
+
 ```
 
 ### 功能介紹
@@ -29,15 +33,20 @@ npm start
 3. 點進聊天室可以看聊天記錄，也可以試著傳訊息看看對方有沒有在附近。
 4. 可以新增自己的狀態、自我介紹。
 
-- 待做功能:封鎖別人、聊天室擴充功能
+- 待做功能:封鎖別人、聊天室擴充功能、上架至App Store
 
-### 使用之第三方套件、框架、程式
+### 使用之第三方套件
+
+- Frontend:  mobx-react, react-apollo, react-native-maps, react-native-gifted-chat, react-navigation
+- Middleware: apollo-client, apollo-link-context, apollo-link-http
+- Backend: 
+   
 
 ### 使用與參考之框架、模組、原始碼
 
 - css: https://freehtml5.co/
 - backend: babel, mongoose, express, GraphQL, bcrypt
-- frontend: React Native, apollo ,
+- frontend: React Native, apollo ,React Native Maps
 - db: mongodb
 
 ### 分工
