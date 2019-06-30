@@ -85,44 +85,46 @@ export default class loginScreen extends React.Component {
                 <Mutation
                     mutation={GET_TOKEN}
                 >
-                    {(createToken, { loading, error }) => {
-                        
-                        return (
-                            <View style={{flexDirection:'row',justifyContent:'flex-end'}}>
-                            <TouchableOpacity
-                                style={{margin:10,width:80,height:35,backgroundColor:'#ff9317', borderRadius: 15,alignItems:'center',justifyContent:'center'                          }}
-                                title={'產生新的連線代碼'}
-                                onPress={() => {
-                                    this.props.navigation.push('SignUpScreen')
-                                }}
-                                narrow={true}
-                                marginTop={28}
-                            ><Text style={{color:'white'}}>註冊</Text></TouchableOpacity>
-                            <TouchableOpacity
-                                style={{margin:10,width:80,height:35,backgroundColor:'#ff9317', borderRadius: 15,alignItems:'center',justifyContent:'center'                          }}
-                                title={'產生新的連線代碼'}
-                                onPress={() => {
-                                    createToken({ variables: { name: this.state.account, password:this.state.password } }).then(({ data }) => {
-                                        console.log(data)
-                                        console.log(data.login.token)
-                                        console.log(data.login.id)
-                                        console.log(data.login.name)
-                                        AsyncStorage.setItem( "token", data.login.token);
-                                        AsyncStorage.setItem( "id", data.login.id);
-                                        AsyncStorage.setItem( "name", data.login.name);
-                                        this.props.navigation.push('MyDrawerNavigator')
-                                    });
-                                }}
-                                narrow={true}
-                                marginTop={28}
-                            ><Text style={{color:'white'}}>登入</Text></TouchableOpacity>
-                            </View>
-
-                        )
-                    }}
-                </Mutation>
-            </SafeAreaView>
-        );
-    }
-
+                  <Text style={{ color: "white" }}>註冊</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    margin: 10,
+                    width: 80,
+                    height: 35,
+                    backgroundColor: "#ff9317",
+                    borderRadius: 15,
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                  title={"產生新的連線代碼"}
+                  onPress={() => {
+                    createToken({
+                      variables: {
+                        name: this.state.account,
+                        password: this.state.password
+                      }
+                    }).then(({ data }) => {
+                      console.log(data);
+                      console.log(data.login.token);
+                      console.log(data.login.id);
+                      console.log(data.login.name);
+                      AsyncStorage.setItem("token", data.login.token);
+                      AsyncStorage.setItem("id", data.login.id);
+                      AsyncStorage.setItem("name", data.login.name);
+                      this.props.navigation.push("MyDrawerNavigator");
+                    });
+                  }}
+                  narrow={true}
+                  marginTop={28}
+                >
+                  <Text style={{ color: "white" }}>登入</Text>
+                </TouchableOpacity>
+              </View>
+            );
+          }}
+        </Mutation>
+      </SafeAreaView>
+    );
+  }
 }
