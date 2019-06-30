@@ -7,6 +7,7 @@ import React from 'react'
 import { TouchableOpacity } from "react-native-gesture-handler";
 import ChatRoomDetail from '../screens/chatRoomDetail'
 import LoginScreen from '../screens/loginScreen'
+import SignUpScreen from '../screens/signUpScreen'
 
 const mainScreenNavigation = createStackNavigator(
     {
@@ -14,9 +15,17 @@ const mainScreenNavigation = createStackNavigator(
             screen: LoginScreen,
             navigationOptions: ({ navigation, screenProps }) => (
                 {
-                headerStyle:{
-                    backgroundColor:'#ff9317'
-                },
+                header: null,
+                headerBackTitle: null
+            })
+        },
+        SignUpScreen: {
+            screen: SignUpScreen,
+            navigationOptions: ({ navigation, screenProps }) => (
+                {
+                title:'',
+                headerLeft:'',
+                headerBackTitle:''
             })
         },
         MyDrawerNavigator: {
@@ -35,7 +44,6 @@ const mainScreenNavigation = createStackNavigator(
     {
         initialRouteName:'LoginScreen',
         defaultNavigationOptions: ({ navigation }) => ({
-            headerStyle: { backgroundColor: 'green' },
             title: (navigation.state.index) ? '聊天室' : '地圖',
             gesturesEnabled: false,
             headerLeft: <TouchableOpacity onPress={() => {

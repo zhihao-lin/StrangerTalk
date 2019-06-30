@@ -1,34 +1,40 @@
 import React from "react";
 import { GiftedChat } from "react-native-gifted-chat";
 import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  AsyncStorage,
-  Alert
+    StyleSheet,
+    View,
+    SafeAreaView,
+    Text,
+    TouchableOpacity,
+    TextInput,
+    AsyncStorage,
+    Alert
 } from "react-native";
-import { Query, Mutation } from "react-apollo";
-import { GET_TOKEN } from "../graphql";
+import { Query, Mutation } from 'react-apollo'
+import { GET_TOKEN } from '../graphql'
+import Geolocation from "Geolocation";
 
-let username = "";
 
-export default class loginScreen extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { account: "", password: "" };
-    AsyncStorage.getItem("token").then(userToken => {
-      console.log(userToken);
-      if (userToken) this.props.navigation.navigate("MyDrawerNavigator");
-    });
-  }
+let username = ''
 
+
+
+
+
+
+export default class SignUpScreen extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = { account: '', password: '' };
+        this.state = { 
+            local:{
+                longitude,
+                latitude,
+            },
+            account: '',
+            age:'', 
+            password: '',
+            description:'' };
         AsyncStorage.getItem('token').then((userToken) => {
             console.log(userToken)
             //if(userToken)
@@ -36,6 +42,30 @@ export default class loginScreen extends React.Component {
          })
     }
     
+    componentDidMount() {
+        this.getLocation();
+      }
+    
+      getLocation() {
+        Geolocation.getCurrentPosition(
+          location => {
+            this.setState({
+              local: {
+                longitude: location.coords.longitude,
+                latitude: location.coords.latitude
+              }
+            });
+            var result =
+              "\n經度：" +
+              location.coords.longitude +
+              "\n緯度：" +
+              location.coords.latitude;
+          },
+          error => {
+            alert("獲取位置失败：" + error);
+          }
+        );
+      }
     
     render() {
 
@@ -56,16 +86,12 @@ export default class loginScreen extends React.Component {
                           color: '#949494',
                           fontSize: 18,
                           marginBottom:8
-                    }}>帳號</Text>
+                    }}>Name</Text>
                     <TextInput style={{ 
-                          paddingHorizontal: 10,
-                          fontSize:20,
-                          fontFamily: 'Arial',
-                          borderRadius: 26.5,
+                          fontSize: 18,
                           border: 'solid',
-                          borderWidth: 1,
+                          borderBottomWidth: 1,
                           borderColor: '#878787',
-                          backgroundColor: '#f9f9f9',
                           width: 250, 
                           height: 40,
                           marginBottom:8
@@ -76,41 +102,61 @@ export default class loginScreen extends React.Component {
                         color: '#949494',
                         fontSize: 18,
                         marginBottom:8
-                    }}>密碼</Text>
-                    <TextInput style={{ 
-                        paddingHorizontal: 10,
-                        fontSize:20,
-                        fontFamily: 'Arial',
-                        borderRadius: 26.5,
+                    }}>Age</Text>
+                    <TextInput style={{
+                        fontSize: 18,
                         border: 'solid',
-                        borderWidth: 1,
+                        borderBottomWidth: 1,
                         borderColor: '#878787',
-                        backgroundColor: '#f9f9f9',
-                        width: 250,
+                        width: 250, 
+                        height: 40,
+                        marginBottom:8
+                     }} onChangeText={(text) => this.setState({ age: text })}
+                        value={this.state.age}
+                    />
+                    <Text style={{
+                        color: '#949494',
+                        fontSize: 18,
+                        marginBottom:8
+                    }}>Password</Text>
+                    <TextInput style={{ 
+                        fontSize: 18,
+                        border: 'solid',
+                        borderBottomWidth: 1,
+                        borderColor: '#878787',
+                        width: 250, 
                         height: 40,
                         marginBottom:8
                      }} onChangeText={(text) => this.setState({ password: text })}
                         value={this.state.password}
+                    />
+                    <Text style={{
+                        color: '#949494',
+                        fontSize: 18,
+                        marginBottom:8
+                    }}>Describe YourSelf</Text>
+                    <TextInput style={{ 
+                        fontSize: 18,
+                        border: 'solid',
+                        borderBottomWidth: 1,
+                        borderColor: '#878787',
+                        width: 250, 
+                        height: 40,
+                        marginBottom:8
+                     }} onChangeText={(text) => this.setState({ description: text })}
+                        value={this.state.description}
                     />
                 </View>
                 <Mutation
                     mutation={GET_TOKEN}
                 >
                     {(createToken, { loading, error }) => {
-                        
+                        if (error) {
+                            Alert.alert('連線錯誤', '請檢查網路狀態', { text: '確認', onPress: () => { } });
+                        }
                         return (
-                            <View style={{flexDirection:'row',justifyContent:'flex-end'}}>
                             <TouchableOpacity
-                                style={{margin:10,width:80,height:35,backgroundColor:'#ff9317', borderRadius: 15,alignItems:'center',justifyContent:'center'                          }}
-                                title={'產生新的連線代碼'}
-                                onPress={() => {
-                                    this.props.navigation.push('SignUpScreen')
-                                }}
-                                narrow={true}
-                                marginTop={28}
-                            ><Text style={{color:'white'}}>註冊</Text></TouchableOpacity>
-                            <TouchableOpacity
-                                style={{margin:10,width:80,height:35,backgroundColor:'#ff9317', borderRadius: 15,alignItems:'center',justifyContent:'center'                          }}
+                                style={{marginTop:10,width:80,height:35,backgroundColor:'#ff9317', borderRadius: 15,alignItems:'center',justifyContent:'center'                          }}
                                 title={'產生新的連線代碼'}
                                 onPress={() => {
                                     createToken({ variables: { name: this.state.account, password:this.state.password } }).then(({ data }) => {
@@ -121,19 +167,15 @@ export default class loginScreen extends React.Component {
                                         AsyncStorage.setItem( "token", data.login.token);
                                         AsyncStorage.setItem( "id", data.login.id);
                                         AsyncStorage.setItem( "name", data.login.name);
-                                        this.props.navigation.push('MyDrawerNavigator')
                                     });
                                 }}
                                 narrow={true}
                                 marginTop={28}
-                            ><Text style={{color:'white'}}>登入</Text></TouchableOpacity>
-                            </View>
-
+                            ><Text style={{color:'white'}}>註冊</Text></TouchableOpacity>
                         )
                     }}
                 </Mutation>
             </SafeAreaView>
         );
     }
-
 }
