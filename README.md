@@ -19,7 +19,7 @@ npm start
 - 登入、註冊
 
 1. 可以註冊新的使用者，或是用舊用戶登入，使用者名稱必須唯一不能跟別人重複。
-2. 登入資料採用 JSON Web Token，以 http req headers 紀錄
+2. 登入資料採用 JSON Web Token，以 http req headers 紀錄，固定時間會過期需要重新登入。
 3. 密碼用 BCrypt 加密、比對
 
 - 基本功能
@@ -30,5 +30,18 @@ npm start
 4. 可以新增自己的狀態、自我介紹。
 
 - 待做功能:封鎖別人、聊天室擴充功能
-  專題製作心得
-  使用之第三方套件、框架、程式
+
+### 使用之第三方套件、框架、程式
+
+### 使用與參考之框架、模組、原始碼
+
+css: https://freehtml5.co/
+backend: babel, mongoose, express, GraphQL
+frontend: React Native, apollo
+db: mongodb
+
+### 專題製作心得
+
+- 尹新博
+- 林志皓
+- 陳曦
