@@ -12,10 +12,10 @@ import { Query } from "react-apollo";
 import { GET_USER_LOCATION } from "../graphql";
 import { Marker, Callout, CalloutSubview } from "react-native-maps";
 import { TextInput } from "react-native-gesture-handler";
-import { Image } from 'react-native'
-import { AsyncStorage } from 'react-native'
-import { GET_CHAT_ROOMS } from '../graphql'
-
+import { Image } from "react-native";
+import { AsyncStorage } from "react-native";
+import { GET_CHAT_ROOMS } from "../graphql";
+import { blockStatement } from "@babel/types";
 
 export default class MapScreen extends Component {
   constructor(props) {
@@ -25,16 +25,15 @@ export default class MapScreen extends Component {
         longitude: 0,
         latitude: 0
       },
-      username:''
+      username: ""
     };
-    AsyncStorage.getItem('name').then((name) => {
-      console.log(name)
-      this.setState({username:name})
-   })
+    AsyncStorage.getItem("name").then(name => {
+      console.log(name);
+      this.setState({ username: name });
+    });
   }
 
-  componentWillMount() {
-  }
+  componentWillMount() {}
 
   componentDidMount() {
     this.getLocation();
@@ -61,61 +60,93 @@ export default class MapScreen extends Component {
     );
   }
 
-  renderMarker(users,friends) {
+  renderMarker(users, friends) {
     const addMarker = users.map(user => {
-      let isFriendBool = false
-      console.log(user)
-      console.log(friends)
-      for( i = 0; i < friends.length ; i++){
-        console.log(user.name)
-        console.log(friends[i].name)
-        if(user.name === friends[i].name){
-          isFriendBool = true
-          break
-        }
-        else{
-          isFriendBool = false
+      let isFriendBool = false;
+      console.log(user);
+      console.log(friends);
+      for (i = 0; i < friends.length; i++) {
+        console.log(user.name);
+        console.log(friends[i].name);
+        if (user.name === friends[i].name) {
+          isFriendBool = true;
+          break;
+        } else {
+          isFriendBool = false;
         }
       }
-      console.log(isFriendBool)
 
       return (
-        <Query query={GET_CHAT_ROOMS} fetchPolicy={"network-only"}
-          variables={{ name: this.state.username }}>
+        <Query
+          query={GET_CHAT_ROOMS}
+          fetchPolicy={"network-only"}
+          variables={{ name: this.state.username }}
+        >
           {({ loading, error, data }) => {
-            if(loading) return (null)
-            const messages = data.chatRooms.find((item)=>{
-              if(item.names[0]===user.name || item.names[1]===user.name){
-                return item
+            if (loading) return null;
+            const messages = data.chatRooms.find(item => {
+              if (item.names[0] === user.name || item.names[1] === user.name) {
+                return item;
               }
-            })
+            });
             return (
               <Marker
                 coordinate={{
                   latitude: user.latitude,
                   longitude: user.longitude
                 }}
-                pinColor={isFriendBool?'red':'blue'}
+                pinColor={isFriendBool ? "red" : "blue"}
               >
                 <Callout>
-                  
-                  <View style={{ flex:1,padding:10, marginBottom: 20 }}>
-                    <Text style={{ fontFamily: 'Arial'}}>Name: {user.name}</Text>
-                    <Text>Self Introduction: </Text>
-                    <Text>{user.description}</Text>
+                  <View style={{ flex: 1, padding: 10, marginBottom: 20 }}>
+                    <Text
+                      style={{
+                        fontFamily: "Arial",
+                        fontWeight: "bold",
+                        marginBottom: 2,
+                        color: "gray"
+                      }}
+                    >
+                      名字: {user.name}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: "Arial",
+                        color: "gray",
+                        fontWeight: "bold"
+                      }}
+                    >
+                      介紹: {user.description}
+                    </Text>
                   </View>
-                  <CalloutSubview style={{ flex: 1 }} onPress={() => {
-                    console.log(this.props.navigation)
-                    this.props.navigation.navigate('ChatRoomDetail',{
-                      data : messages?messages:'' })
-                   }}>
-                    <TouchableOpacity style={{
-                      borderRadius: 5,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      backgroundColor: 'red'
-                    }} ref={button => this.button = button}>
-                      <Text style={{ marginVertical: 5, fontFamily: 'Arial', color: 'white' }}>傳送訊息</Text>
+                  <CalloutSubview
+                    style={{ flex: 1 }}
+                    onPress={() => {
+                      console.log(this.props.navigation);
+                      this.props.navigation.navigate("ChatRoomDetail", {
+                        data: messages ? messages : ""
+                      });
+                    }}
+                  >
+                    <TouchableOpacity
+                      style={{
+                        borderRadius: 5,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        backgroundColor: "#00d9e9"
+                      }}
+                      ref={button => (this.button = button)}
+                    >
+                      <Text
+                        style={{
+                          marginVertical: 5,
+                          fontFamily: "Arial",
+                          fontWeight: "bold",
+                          color: "white"
+                        }}
+                      >
+                        傳送訊息
+                      </Text>
                     </TouchableOpacity>
                   </CalloutSubview>
                 </Callout>
@@ -123,7 +154,6 @@ export default class MapScreen extends Component {
             );
           }}
         </Query>
-
       );
     });
     console.log(addMarker);
@@ -132,15 +162,21 @@ export default class MapScreen extends Component {
 
   render() {
     return (
-      <Query query={GET_USER_LOCATION} fetchPolicy={"network-only"} variables={{name:this.state.username}}>
+      <Query
+        query={GET_USER_LOCATION}
+        fetchPolicy={"network-only"}
+        variables={{ name: this.state.username }}
+      >
         {({ loading, error, data }) => {
           if (loading) return null;
           if (error) return `Error! ${error.message}`;
-          console.log(data.user.friends)
-          const marker = this.renderMarker(data.user.neighbors,data.user.friends);
+          console.log(data.user.friends);
+          const marker = this.renderMarker(
+            data.user.neighbors,
+            data.user.friends
+          );
           return (
             <SafeAreaView style={styles.container}>
-
               <MapView
                 style={styles.map}
                 region={{
@@ -149,7 +185,6 @@ export default class MapScreen extends Component {
                   latitudeDelta: 0.01,
                   longitudeDelta: 0.01
                 }}
-
               >
                 <Marker
                   pinColor={"green"}
@@ -157,11 +192,9 @@ export default class MapScreen extends Component {
                     latitude: this.state.local.latitude,
                     longitude: this.state.local.longitude
                   }}
-                >
-                </Marker>
+                />
                 {marker}
               </MapView>
-
             </SafeAreaView>
           );
         }}
@@ -199,6 +232,5 @@ const styles = StyleSheet.create({
     letterSpacing: -0.24,
     textAlign: "center",
     lineHeight: 20
-  },
-
+  }
 });
