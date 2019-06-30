@@ -133,8 +133,7 @@ const Mutation = new GraphQLObjectType({
         password: { type: new GraphQLNonNull(GraphQLString) },
         description: { type: GraphQLString },
         latitude: { type: new GraphQLNonNull(GraphQLFloat) },
-        longitude: { type: new GraphQLNonNull(GraphQLFloat) },
-        friends: { type: new GraphQLNonNull(GraphQLString) }
+        longitude: { type: new GraphQLNonNull(GraphQLFloat) }
       },
       resolve(parent, args) {
         const user = db.users.find(e => e.name == args.name);
