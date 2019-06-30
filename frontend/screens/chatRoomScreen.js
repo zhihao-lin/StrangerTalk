@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import ChatRoomItem from './component/chatRoomItem'
-import { GET_CHAT_ROOM_DETAIL } from '../graphql'
+import { GET_CHAT_ROOMS } from '../graphql'
 import { Query } from 'react-apollo'
 
 
@@ -30,7 +30,7 @@ export default class ChatRoomScreen extends React.Component {
 
   render() {
     return (
-      <Query query={GET_CHAT_ROOM_DETAIL} fetchPolicy={"network-only"}
+      <Query query={GET_CHAT_ROOMS} fetchPolicy={"network-only"}
         variables={{ name:this.state.username  }}>
         {({ loading, error, data }) => {
           if(loading) return(null);

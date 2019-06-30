@@ -17,5 +17,9 @@ query ($name:String!){
       latitude
       longitude     
     }
+    friends {
+      id
+      name
+    }
   } 
 }`;

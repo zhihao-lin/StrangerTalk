@@ -11,7 +11,7 @@ import {
     Alert
 } from "react-native";
 import { Query, Mutation } from 'react-apollo'
-import { GET_TOKEN } from '../graphql'
+import {  SIGN_UP } from '../graphql'
 import Geolocation from "Geolocation";
 
 
@@ -28,11 +28,11 @@ export default class SignUpScreen extends React.Component {
         super(props);
         this.state = { 
             local:{
-                longitude,
-                latitude,
+                longitude:0,
+                latitude:0
             },
             account: '',
-            age:'', 
+            age:0, 
             password: '',
             description:'' };
         AsyncStorage.getItem('token').then((userToken) => {
@@ -111,7 +111,7 @@ export default class SignUpScreen extends React.Component {
                         width: 250, 
                         height: 40,
                         marginBottom:8
-                     }} onChangeText={(text) => this.setState({ age: text })}
+                     }} onChangeText={(text) => this.setState({ age: parseInt(text) })}
                         value={this.state.age}
                     />
                     <Text style={{
@@ -148,9 +148,9 @@ export default class SignUpScreen extends React.Component {
                     />
                 </View>
                 <Mutation
-                    mutation={GET_TOKEN}
+                    mutation={SIGN_UP}
                 >
-                    {(createToken, { loading, error }) => {
+                    {(createSignUp, { loading, error }) => {
                         if (error) {
                             Alert.alert('連線錯誤', '請檢查網路狀態', { text: '確認', onPress: () => { } });
                         }
@@ -159,14 +159,19 @@ export default class SignUpScreen extends React.Component {
                                 style={{marginTop:10,width:80,height:35,backgroundColor:'#ff9317', borderRadius: 15,alignItems:'center',justifyContent:'center'                          }}
                                 title={'產生新的連線代碼'}
                                 onPress={() => {
-                                    createToken({ variables: { name: this.state.account, password:this.state.password } }).then(({ data }) => {
-                                        console.log(data)
-                                        console.log(data.login.token)
-                                        console.log(data.login.id)
-                                        console.log(data.login.name)
-                                        AsyncStorage.setItem( "token", data.login.token);
-                                        AsyncStorage.setItem( "id", data.login.id);
-                                        AsyncStorage.setItem( "name", data.login.name);
+                                    console.log(this.state)
+                                    createSignUp({ variables: { 
+                                            name: this.state.account,
+                                            password: this.state.password,
+                                            age: this.state.age,
+                                            description: this.state.description,
+                                            latitude: this.state.local.latitude,
+                                            longitude: this.state.local.longitude            
+                                     }
+                                    }
+                                    ).then(({ data }) => {
+                                         console.log(data)
+                                        this.props.navigation.pop()
                                     });
                                 }}
                                 narrow={true}

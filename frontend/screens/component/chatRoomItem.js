@@ -39,19 +39,19 @@ export default class chatRoomItem extends React.Component {
         console.log(opponent)
         return (
             <TouchableOpacity
-                style={{ flex: 1, flexDirection: 'row', borderBottomWidth: 1, borderColor: '#ff9d00', height: 100, alignItems: 'stretch' }}
+                style={{ flex: 1, flexDirection: 'row', height: 80, alignItems: 'stretch' }}
                 onPress={() => {
                     this.props.navigation.push('ChatRoomDetail', {
                         data: this.props.data
                     })
                 }}
             >
-                <View style={{ flex: 1, flexDirection:'row',alignItems: 'center', justifyContent: 'flex-start',paddingLeft:30 }}>
-                    <View style={{ width: 50, height: 50, backgroundColor: 'grey' }}></View>
+                <View style={{ flex: 1, flexDirection:'row',alignItems: 'center', justifyContent: 'flex-start',paddingLeft:15}}>
+                    <View style={{ borderRadius:30,width: 50, height: 50, backgroundColor: 'grey' }}></View>
 
                     <Text style={{
-                        marginLeft:50,
-                        fontSize: 30,
+                        marginLeft:30,
+                        fontSize: 20,
 
                     }}>{opponent}</Text>
                 </View>

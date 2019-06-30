@@ -24,17 +24,6 @@ export default class loginScreen extends React.Component {
       if (userToken) this.props.navigation.navigate("MyDrawerNavigator");
     });
   }
-
-
-    constructor(props) {
-        super(props);
-        this.state = { account: '', password: '' };
-        AsyncStorage.getItem('token').then((userToken) => {
-            console.log(userToken)
-            //if(userToken)
-            //this.props.navigation.navigate('MyDrawerNavigator');
-         })
-    }
     
     
     render() {

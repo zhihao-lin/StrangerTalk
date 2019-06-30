@@ -44,7 +44,7 @@ const mainScreenNavigation = createStackNavigator(
     {
         initialRouteName:'LoginScreen',
         defaultNavigationOptions: ({ navigation }) => ({
-            title: (navigation.state.index) ? '聊天室' : '地圖',
+            title: (navigation.state.index) ? 'ChatRoom' : 'Map',
             gesturesEnabled: false,
             headerLeft: <TouchableOpacity onPress={() => {
                 if (!navigation.state.isDrawerOpen) {

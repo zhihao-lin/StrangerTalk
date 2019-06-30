@@ -12,9 +12,9 @@ import { Query } from "react-apollo";
 import { GET_USER_LOCATION } from "../graphql";
 import { Marker, Callout, CalloutSubview } from "react-native-maps";
 import { TextInput } from "react-native-gesture-handler";
-import { button } from 'react-native'
+import { Image } from 'react-native'
 import { AsyncStorage } from 'react-native'
-import { GET_CHAT_ROOM_DETAIL } from '../graphql'
+import { GET_CHAT_ROOMS } from '../graphql'
 
 
 export default class MapScreen extends Component {
@@ -61,11 +61,23 @@ export default class MapScreen extends Component {
     );
   }
 
-  renderMarker(users) {
+  renderMarker(users,friends) {
+    let isFriendBool = false
     const addMarker = users.map(user => {
-      console.log(user);
+      console.log(user)
+      console.log(friends)
+      for( i = 0; i < friends.length ; i++){
+        console.log(user.name)
+        console.log(friends[i].name)
+        if(user.name === friends[i].name){
+          isFriendBool = true
+          console.log('istrue')
+          break
+        }
+      }
+      
       return (
-        <Query query={GET_CHAT_ROOM_DETAIL} fetchPolicy={"network-only"}
+        <Query query={GET_CHAT_ROOMS} fetchPolicy={"network-only"}
           variables={{ name: this.state.username }}>
           {({ loading, error, data }) => {
             if(loading) return (null)
@@ -73,7 +85,6 @@ export default class MapScreen extends Component {
               if(item.names[0]===user.name || item.names[1]===user.name){
                 return item
               }
-  
             })
             return (
               <Marker
@@ -81,11 +92,13 @@ export default class MapScreen extends Component {
                   latitude: user.latitude,
                   longitude: user.longitude
                 }}
+                pinColor={isFriendBool?'red':'blue'}
               >
                 <Callout>
+                  
                   <View style={{ flex:1,padding:10, marginBottom: 20 }}>
-                    <Text>姓名:{user.name}</Text>
-                    <Text>自我介紹:{user.description}</Text>
+                    <Text style={{ fontFamily: 'Arial'}}>Name: {user.name}</Text>
+                    <Text>Self Introduction: {user.description}</Text>
                   </View>
                   <CalloutSubview style={{ flex: 1 }} onPress={() => {
                     console.log(this.props.navigation)
@@ -119,8 +132,8 @@ export default class MapScreen extends Component {
         {({ loading, error, data }) => {
           if (loading) return null;
           if (error) return `Error! ${error.message}`;
-          console.log(data)
-          const marker = this.renderMarker(data.user.neighbors);
+          console.log(data.user.friends)
+          const marker = this.renderMarker(data.user.neighbors,data.user.friends);
           return (
             <SafeAreaView style={styles.container}>
 
