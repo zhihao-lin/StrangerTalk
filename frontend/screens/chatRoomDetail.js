@@ -14,6 +14,7 @@ export default class chatRoomDetail extends React.Component {
   constructor(props) {
     super(props);
     this._setData = this._setData.bind(this)
+    this._deleteData = this._deleteData.bind(this)
     this.state = {
       messages: [],
     };
@@ -23,7 +24,18 @@ export default class chatRoomDetail extends React.Component {
 
   }
 
+  _deleteData(){
+    this.setState({
+      messages: [],
+    })
+  }
+
+  componentDidMount(){
+    console.log(this.props)
+  }
+
   componentWillMount() {
+    opponentname = this.props.navigation.getParam('username')
     if(this.props.navigation.getParam('data')){
       this._setData(this.props.navigation.getParam('data'))
     }
@@ -64,10 +76,10 @@ export default class chatRoomDetail extends React.Component {
 
 
   onSend(messages = []) {
-    console.log(messages)
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }))
+    
   }
 
   render() {
