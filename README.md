@@ -35,10 +35,10 @@ npm start
 
 ### 使用與參考之框架、模組、原始碼
 
-css: https://freehtml5.co/
-backend: babel, mongoose, express, GraphQL, bcrypt
-frontend: React Native, apollo
-db: mongodb
+- css: https://freehtml5.co/
+- backend: babel, mongoose, express, GraphQL, bcrypt
+- frontend: React Native, apollo
+- db: mongodb
 
 ### 分工
 
