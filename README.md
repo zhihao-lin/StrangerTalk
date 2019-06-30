@@ -39,9 +39,7 @@ build
 
 - Frontend:  mobx-react, react-apollo, react-native-maps, react-native-gifted-chat, react-navigation
 - Middleware: apollo-client, apollo-link-context, apollo-link-http
-- Backend: 
    
-
 ### 使用與參考之框架、模組、原始碼
 
 - css: https://freehtml5.co/
@@ -52,7 +50,7 @@ build
 ### 分工
 
 - 尹新博：frontend、串接Api、React Native
-- 林志皓
+- 林志皓: backend - MongoDB Schema design, GraphQL API design 
 - 陳曦：backend、GrpahQL，UI 介面設計
 
 ### 專題製作心得
