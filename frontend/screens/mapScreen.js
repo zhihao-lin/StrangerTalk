@@ -62,8 +62,8 @@ export default class MapScreen extends Component {
   }
 
   renderMarker(users,friends) {
-    let isFriendBool = false
     const addMarker = users.map(user => {
+      let isFriendBool = false
       console.log(user)
       console.log(friends)
       for( i = 0; i < friends.length ; i++){
@@ -71,11 +71,14 @@ export default class MapScreen extends Component {
         console.log(friends[i].name)
         if(user.name === friends[i].name){
           isFriendBool = true
-          console.log('istrue')
           break
         }
+        else{
+          isFriendBool = false
+        }
       }
-      
+      console.log(isFriendBool)
+
       return (
         <Query query={GET_CHAT_ROOMS} fetchPolicy={"network-only"}
           variables={{ name: this.state.username }}>
@@ -98,7 +101,8 @@ export default class MapScreen extends Component {
                   
                   <View style={{ flex:1,padding:10, marginBottom: 20 }}>
                     <Text style={{ fontFamily: 'Arial'}}>Name: {user.name}</Text>
-                    <Text>Self Introduction: {user.description}</Text>
+                    <Text>Self Introduction: </Text>
+                    <Text>{user.description}</Text>
                   </View>
                   <CalloutSubview style={{ flex: 1 }} onPress={() => {
                     console.log(this.props.navigation)
