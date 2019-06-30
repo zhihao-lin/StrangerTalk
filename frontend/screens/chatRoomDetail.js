@@ -3,7 +3,7 @@ import React from 'react'
 import { GiftedChat } from 'react-native-gifted-chat'
 import { GET_CHAT_ROOMS } from '../graphql'
 import { Query, Mutation } from 'react-apollo'
-import { AsyncStorage } from 'react-native'
+import { AsyncStorage,Alert } from 'react-native'
 import { SEND_MESSAGE } from '../graphql'
 import { makeEmptyAggregatedTestResult } from '@jest/test-result';
 
@@ -74,7 +74,9 @@ export default class chatRoomDetail extends React.Component {
         mutation={SEND_MESSAGE}
       >
         {(sendmessage, { loading, error }) => {
-          if (error) console.log('error')
+          if (error){
+            Alert.alert('Too far', 'Cannot Send Message', { text: '確認', onPress: () => { } });
+          }
           return (
             <GiftedChat
               messages={this.state.messages}
