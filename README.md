@@ -50,7 +50,7 @@ build
 
 - 尹新博：frontend、串接 Api、React Native
 - 林志皓: backend - MongoDB Schema design, GraphQL API design
-- 陳曦：backend、GrpahQL、middleware、Schema design登入、UI 介面設計
+- 陳曦：backend,GrpahQL,middleware,Schema design,UI Design
 
 ### 專題製作心得
 
