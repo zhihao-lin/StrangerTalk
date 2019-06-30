@@ -61,8 +61,8 @@ export default class MapScreen extends Component {
   }
 
   renderMarker(users, friends) {
-    let isFriendBool = false;
     const addMarker = users.map(user => {
+      let isFriendBool = false;
       console.log(user);
       console.log(friends);
       for (i = 0; i < friends.length; i++) {
@@ -70,8 +70,9 @@ export default class MapScreen extends Component {
         console.log(friends[i].name);
         if (user.name === friends[i].name) {
           isFriendBool = true;
-          console.log("istrue");
           break;
+        } else {
+          isFriendBool = false;
         }
       }
 

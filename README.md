@@ -37,12 +37,12 @@ npm start
 
 - css: https://freehtml5.co/
 - backend: babel, mongoose, express, GraphQL, bcrypt
-- frontend: React Native, apollo
+- frontend: React Native, apollo ,
 - db: mongodb
 
 ### 分工
 
-- 尹新博
+- 尹新博：frontend、串接Api、React Native
 - 林志皓
 - 陳曦：backend、GrpahQL，UI 介面設計
 
