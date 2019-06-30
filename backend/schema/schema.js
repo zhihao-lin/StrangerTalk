@@ -112,6 +112,8 @@ const RootQuery = new GraphQLObjectType({
       args: { name: { type: GraphQLString } },
       async resolve(parent, args, context) {
         if (context.me == null) throw new Error("please log in");
+        if (context.me.name != args.name && context.me.name != "Boss")
+          throw new Error("You are not authorized");
         let chatRoomsAll = await ChatRoom.find({});
         let chatRooms = chatRoomsAll.filter(room => {
           return room.names.includes(args.name);
