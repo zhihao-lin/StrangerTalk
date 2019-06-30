@@ -1,8 +1,10 @@
 # 題目名稱：StrangerTalk
 
-## 一句話描述這個服務在做什麼
+###一句話描述這個服務在做什麼
 
 可以跟在附近的使用者聊天，搭訕神器
+
+### 下載、安裝
 
 ```
 git clone https://github.com/j1a0m0e4sNTU/StrangerTalk.git
@@ -11,6 +13,8 @@ cd backend
 npm install
 npm start
 ```
+
+### 功能介紹
 
 - 登入、註冊
 
