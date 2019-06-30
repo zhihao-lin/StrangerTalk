@@ -146,8 +146,7 @@ const Mutation = new GraphQLObjectType({
             password: args.password,
             description: args.description,
             latitude: args.latitude,
-            longitude: args.longitude,
-            friends: {}
+            longitude: args.longitude
           };
 
           const new_user = new User(user);
